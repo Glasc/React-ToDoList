@@ -7,25 +7,6 @@
   max-width: 500px;
 }
 
-.todoContainer * {
-}
-
-.itemsContainer {
-  display: flex;
-  flex-direction: column;
-}
-
-.item {
-  display: flex;
-  justify-content: space-between;
-  margin: 0.2em 0;
-}
-
-.itemIcons {
-  display: flex;
-  column-gap: 0.5em;
-}
-
 .buttonContainer {
   background-color: #edf2f7;
   /* display: flex;

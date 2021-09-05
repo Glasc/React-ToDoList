@@ -9,6 +9,7 @@ import {
 import { Input } from '@chakra-ui/input'
 import React from 'react'
 import styles from './Todo.module.css'
+import { Item } from './Item'
 
 interface TodoProps {}
 
@@ -36,71 +37,9 @@ export const Todo: React.FC<TodoProps> = ({}) => {
         />
       </form>
       <div className={styles.itemsContainer}>
-        <div className={styles.item}>
-          <Checkbox marginTop='0.3em' marginBottom='0.3em'>
-            Item 1
-          </Checkbox>
-          <div className={styles.itemIcons}>
-            <IconButton
-              icon={<EditIcon />}
-              aria-label=''
-              size='sm'
-              variant='outline'
-              colorScheme='pink'
-            />
-            <IconButton
-              icon={<DeleteIcon />}
-              aria-label=''
-              size='sm'
-              variant='outline'
-              colorScheme='pink'
-            />
-          </div>
-        </div>
-
-        <div className={styles.item}>
-          <Checkbox marginTop='0.3em' marginBottom='0.3em'>
-            Item 1
-          </Checkbox>
-          <div className={styles.itemIcons}>
-            <IconButton
-              icon={<EditIcon />}
-              aria-label=''
-              size='sm'
-              variant='outline'
-              colorScheme='pink'
-            />
-            <IconButton
-              icon={<DeleteIcon />}
-              aria-label=''
-              size='sm'
-              variant='outline'
-              colorScheme='pink'
-            />
-          </div>
-        </div>
-
-        <div className={styles.item}>
-          <Checkbox marginTop='0.3em' marginBottom='0.3em'>
-            Item 1
-          </Checkbox>
-          <div className={styles.itemIcons}>
-            <IconButton
-              icon={<EditIcon />}
-              aria-label=''
-              size='sm'
-              variant='outline'
-              colorScheme='pink'
-            />
-            <IconButton
-              icon={<DeleteIcon />}
-              aria-label=''
-              size='sm'
-              variant='outline'
-              colorScheme='pink'
-            />
-          </div>
-        </div>
+        <Item isChecked={true} itemText='Item 1...' styles={styles} />
+        <Item isChecked={true} itemText='Item 2...' styles={styles} />
+        <Item isChecked={true} itemText='Item 3...' styles={styles} />
       </div>
       <footer className={styles.buttonContainer}>
         <section className={styles.leftSection}>

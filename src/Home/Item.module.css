@@ -1,0 +1,21 @@
+@import './Todo.module.css';
+
+.itemsContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.2em 0;
+}
+
+.itemIcons {
+  display: flex;
+  column-gap: 0.5em;
+}
+
+.itemChecked {
+  text-decoration: line-through;
+}
