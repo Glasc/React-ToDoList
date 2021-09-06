@@ -6,17 +6,10 @@ import {
   current,
   PayloadAction,
 } from '@reduxjs/toolkit'
-import { stat } from 'fs'
 
 interface todoState {
   mode: 'adding' | 'editing'
   items: ItemInterface[]
-}
-
-const lol = {
-  2121: {
-    name: 'cesar',
-  },
 }
 
 const initialState: todoState = {
@@ -40,7 +33,6 @@ export const todoSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    addReducer: (state, action: PayloadAction<number>) => {},
     checkItem: (state, action: PayloadAction<ItemInterface>) => {
       const { id } = action.payload
       state.items = current(state).items.map(
@@ -52,14 +44,27 @@ export const todoSlice = createSlice({
         }
       )
     },
-    addItem: (state, action: PayloadAction<ItemInterface>) => {
-      const { id, text, isChecked } = action.payload
-      state.items.push({ id, text, isChecked })
+    addItem: (
+      state,
+      action: PayloadAction<{ id: number; text: string }>
+    ) => {
+      const { id, text } = action.payload
+      state.items = [
+        { id, text, isChecked: false },
+        ...current(state).items,
+      ]
+    },
+    deleteItem: (state, action: PayloadAction<{ id: number }>) => {
+      const { id } = action.payload
+      state.items = current(state).items.filter((currItem) => {
+        if (currItem.id !== id) return true
+        return false
+      })
     },
   },
 })
 
-export const { addReducer, checkItem, addItem } = todoSlice.actions
+export const { checkItem, addItem, deleteItem } = todoSlice.actions
 
 export const selectItems = (state: RootState) => state.todo.items
 export const selectMode = (state: RootState) => state.todo.mode

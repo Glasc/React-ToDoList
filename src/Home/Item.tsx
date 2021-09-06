@@ -4,21 +4,19 @@ import { IconButton } from '@chakra-ui/button'
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import styles from './Item.module.css'
 import { useAppDispatch } from '../store/hooks'
-import { checkItem } from './Todo/todoSlice'
+import { checkItem, deleteItem } from './Todo/todoSlice'
+import { ItemInterface } from '../shared/types'
 
-interface ItemProps {
-  id: number
-  isChecked: boolean
-  itemText: string
-  styles?: { [key: string]: string }
-}
-
-export const Item: React.FC<ItemProps> = ({
+export const Item: React.FC<ItemInterface> = ({
   id,
   isChecked,
-  itemText: text,
+  text,
 }) => {
   const dispatch = useAppDispatch()
+
+  const handleDelete = () => {
+    dispatch(deleteItem({id}))
+  }
 
   return (
     <div className={styles.item}>
@@ -26,9 +24,7 @@ export const Item: React.FC<ItemProps> = ({
         marginTop='0.3em'
         marginBottom='0.3em'
         isChecked={isChecked}
-        onChange={() =>
-          dispatch(checkItem({ id, isChecked, text }))
-        }
+        onChange={() => dispatch(checkItem({ id, isChecked, text }))}
       >
         <span className={isChecked ? styles.itemChecked : ''}>
           {text}
@@ -48,6 +44,7 @@ export const Item: React.FC<ItemProps> = ({
           size='sm'
           variant='outline'
           colorScheme='pink'
+          onClick={handleDelete}
         />
       </div>
     </div>

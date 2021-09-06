@@ -7,32 +7,3 @@
   max-width: 500px;
 }
 
-.buttonContainer {
-  background-color: #edf2f7;
-  /* display: flex;
-  justify-content: space-between; */
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  margin: 1em 0;
-  margin-bottom: 0.5em;
-}
-
-.leftSection {
-  display: flex;
-  align-items: center;
-}
-
-.rightSection {
-  display: flex;
-  justify-content: center;
-  gap: 0 0.4em;
-  background-color: #171923;
-  padding: 0.2em 0;
-}
-
-.span {
-  display: block;
-  color: black;
-  font-weight: 600;
-  padding-bottom: 2px;
-}

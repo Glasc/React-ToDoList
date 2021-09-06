@@ -1,18 +1,11 @@
-import { Button, IconButton } from '@chakra-ui/button'
-import { Checkbox } from '@chakra-ui/checkbox'
-import {
-  AddIcon,
-  DeleteIcon,
-  EditIcon,
-  SearchIcon,
-} from '@chakra-ui/icons'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Input } from '@chakra-ui/input'
-import React, { useEffect } from 'react'
 import styles from './Todo.module.css'
-import { Item } from '../Item'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import { selectItems, selectMode } from './todoSlice'
-import { ItemInterface } from '../../shared/types'
+import { addItem, selectItems, selectMode } from './todoSlice'
+import { Items } from './Items/Items'
+import { H1 } from '../ui/H1'
+import { BottomNav } from './BottomNav/BottomNav'
 
 interface TodoProps {}
 
@@ -21,18 +14,31 @@ export const Todo: React.FC<TodoProps> = ({}) => {
   const items = useAppSelector(selectItems)
   const mode = useAppSelector(selectMode)
 
+  const [inputText, setInputText] = useState<string>('')
+
+  const handleInputTextChange = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    setInputText(e.target.value)
+  }
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    if (inputText && inputText.length > 5) {
+      dispatch(
+        addItem({
+          id: parseInt(new Date().getTime().toString()),
+          text: inputText,
+        })
+      )
+      setInputText('')
+    }
+  }
+
   return (
     <div className={styles.todoContainer}>
-      <h1
-        style={{
-          textAlign: 'center',
-          fontSize: '2rem',
-          fontWeight: 'bold',
-        }}
-      >
-        THINGS TO DO
-      </h1>
-      <form onSubmit={(e) => e.preventDefault}>
+      <H1>THINGS TO DO</H1>
+      <form onSubmit={handleSubmit}>
         <Input
           placeholder='Add New'
           variant='outline'
@@ -41,55 +47,12 @@ export const Todo: React.FC<TodoProps> = ({}) => {
           border='none'
           marginTop='1em'
           marginBottom='1em'
+          onChange={handleInputTextChange}
+          value={inputText}
         />
       </form>
-      <div className={styles.itemsContainer}>
-        {/* <Item isChecked={true} itemText='Item 1...' styles={styles} />
-        <Item isChecked={true} itemText='Item 2...' styles={styles} />
-        <Item isChecked={true} itemText='Item 3...' styles={styles} /> */}
-        {items.map((item: ItemInterface) => {
-          return (
-            <Item
-              id={item.id}
-              key={item.id}
-              isChecked={item.isChecked}
-              itemText={item.text}
-            />
-          )
-        })}
-      </div>
-      <footer className={styles.buttonContainer}>
-        <section className={styles.leftSection}>
-          <IconButton
-            icon={<SearchIcon />}
-            aria-label=''
-            size='sm'
-            variant='outline'
-            color='black'
-          />
-          <IconButton
-            icon={<AddIcon />}
-            aria-label=''
-            size='sm'
-            variant='outline'
-            color='black'
-          />
-          <span className={styles.span}>
-            | {items.length} items left
-          </span>
-        </section>
-        <section className={styles.rightSection}>
-          <Button size='sm' colorScheme='pink' variant='ghost'>
-            All
-          </Button>
-          <Button size='sm' colorScheme='pink' variant='ghost'>
-            Active
-          </Button>
-          <Button size='sm' colorScheme='pink' variant='ghost'>
-            Complete
-          </Button>
-        </section>
-      </footer>
+      <Items />
+      <BottomNav />
     </div>
   )
 }
