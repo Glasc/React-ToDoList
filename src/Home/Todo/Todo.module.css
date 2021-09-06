@@ -1,9 +1,15 @@
 .todoContainer {
   background-color: #1a202c;
   color: white;
-  width: 65%;
-  padding: 1.5em;
+  padding: 1.7em;
   width: 60%;
-  max-width: 500px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
 }
 
+@media (max-width: 480px) {
+  .todoContainer {
+    width: 95%;
+  }
+}

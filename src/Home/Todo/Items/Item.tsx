@@ -3,7 +3,7 @@ import { Checkbox } from '@chakra-ui/checkbox'
 import { IconButton } from '@chakra-ui/button'
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import styles from './Item.module.css'
-import { useAppDispatch } from '../../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import {
   checkItem,
   deleteItem,
@@ -12,6 +12,7 @@ import {
 } from '../todoSlice'
 import { ItemInterface, modeType } from '../../../shared/types'
 import { Input } from '@chakra-ui/input'
+import { selectIsSearching } from '../todoSlice';
 
 export const Item: React.FC<ItemInterface> = ({
   id,
@@ -20,6 +21,8 @@ export const Item: React.FC<ItemInterface> = ({
   text,
 }) => {
   const dispatch = useAppDispatch()
+
+  const isSearching: boolean = useAppSelector(selectIsSearching)
 
   const editRef = useRef<any>(null)
 
@@ -43,6 +46,12 @@ export const Item: React.FC<ItemInterface> = ({
     dispatch(toggleEdit({ id }))
     dispatch(updateItem({ id, newText: editing }))
   }
+
+  useEffect(() => {
+    if (isEditing) {
+      editRef.current.focus()
+    } 
+  }, [isEditing])
 
   return (
     <div className={styles.item}>
@@ -75,6 +84,7 @@ export const Item: React.FC<ItemInterface> = ({
         <IconButton
           icon={<EditIcon />}
           aria-label=''
+          isDisabled={isSearching}
           size='sm'
           variant='outline'
           colorScheme='yellow'

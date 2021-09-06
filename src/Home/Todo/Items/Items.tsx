@@ -5,18 +5,23 @@ import {
   selectItems,
   selectCustomItems,
   showAllItems,
+  restoreEditing,
 } from '../todoSlice'
 import { ItemInterface, modeType } from '../../../shared/types'
 import { Item } from './Item'
 
 interface ItemsProps {}
 
-export const Items: React.FC<ItemsProps> = ({}) => {
+export const Items: React.FC<ItemsProps> = React.memo(({}) => {
   const items = useAppSelector(selectItems)
   const customItems: ItemInterface[] =
     useAppSelector(selectCustomItems)
 
   const dispatch = useAppDispatch()
+
+  // useEffect(() => {
+  //   dispatch(restoreEditing())
+  // }, [dispatch])
 
   useEffect(() => {
     dispatch(showAllItems())
@@ -37,4 +42,4 @@ export const Items: React.FC<ItemsProps> = ({}) => {
       })}
     </div>
   )
-}
+})

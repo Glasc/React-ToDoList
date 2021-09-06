@@ -12,18 +12,18 @@ const initialState: todoState = {
   isSearching: false,
   customItems: [],
   items: [
-    {
-      id: 1442342,
-      text: 'hello',
-      isChecked: true,
-      isEditing: false,
-    },
-    {
-      id: 123212,
-      text: 'hello2',
-      isChecked: false,
-      isEditing: false,
-    },
+    // {
+    //   id: 1442342,
+    //   text: 'hello',
+    //   isChecked: true,
+    //   isEditing: false,
+    // },
+    // {
+    //   id: 123212,
+    //   text: 'hello2',
+    //   isChecked: false,
+    //   isEditing: false,
+    // },
   ],
 }
 
@@ -116,6 +116,18 @@ export const todoSlice = createSlice({
     toggleIsSearching: (state) => {
       state.isSearching = !current(state).isSearching
     },
+    loadItems: (
+      state,
+      action: PayloadAction<ItemInterface[] | []>
+    ) => {
+      state.items = action.payload
+    },
+    restoreEditing: (state) => {
+      state.items = current(state).items.map((currItem) => {
+        currItem = { ...currItem, isEditing: false }
+        return currItem
+      })
+    },
   },
 })
 
@@ -130,6 +142,8 @@ export const {
   showCompleteItems,
   toggleIsSearching,
   searchItems,
+  loadItems,
+  restoreEditing,
 } = todoSlice.actions
 
 export const selectItems = (state: RootState) => state.todo.items

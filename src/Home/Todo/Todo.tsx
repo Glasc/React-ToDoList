@@ -1,20 +1,27 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Input } from '@chakra-ui/input'
 import styles from './Todo.module.css'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import { addItem, selectItems } from './todoSlice'
+import {
+  addItem,
+  loadItems,
+  restoreEditing,
+  selectItems,
+} from './todoSlice'
 import { Items } from './Items/Items'
 import { H1 } from '../ui/H1'
 import { BottomNav } from './BottomNav/BottomNav'
-import { modeType } from '../../shared/types'
+import { modeType, ItemInterface } from '../../shared/types'
 
 interface TodoProps {}
 
 export const Todo: React.FC<TodoProps> = ({}) => {
   const dispatch = useAppDispatch()
-  const items = useAppSelector(selectItems)
+  const items: ItemInterface[] = useAppSelector(selectItems)
+  const defaultHeadText: string = 'THINGS TO DO'
 
   const [inputText, setInputText] = useState<string>('')
+  const [headText, setHeadText] = useState<string>(defaultHeadText)
 
   const handleInputTextChange = (
     e: ChangeEvent<HTMLInputElement>
@@ -24,7 +31,7 @@ export const Todo: React.FC<TodoProps> = ({}) => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    if (inputText && inputText.length > 5) {
+    if (inputText && inputText.length > 3) {
       dispatch(
         addItem({
           id: parseInt(new Date().getTime().toString()),
@@ -32,12 +39,32 @@ export const Todo: React.FC<TodoProps> = ({}) => {
         })
       )
       setInputText('')
+    } else {
+      setHeadText('You need more than 3 letters.')
+      setTimeout(() => {
+        setHeadText(defaultHeadText)
+      }, 3000)
+    }
+
+    return () => {
+      clearTimeout()
     }
   }
 
+  useEffect(() => {
+    dispatch(
+      loadItems(JSON.parse(localStorage.getItem('items') || '[]'))
+    )
+    dispatch(restoreEditing())
+  }, [dispatch])
+
+  useEffect(() => {
+    localStorage.setItem('items', JSON.stringify(items))
+  }, [items])
+
   return (
     <div className={styles.todoContainer}>
-      <H1>THINGS TO DO</H1>
+      <H1>{headText}</H1>
       <form onSubmit={handleSubmit}>
         <Input
           placeholder='Add New'
