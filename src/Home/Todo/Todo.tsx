@@ -7,13 +7,20 @@ import {
   SearchIcon,
 } from '@chakra-ui/icons'
 import { Input } from '@chakra-ui/input'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './Todo.module.css'
-import { Item } from './Item'
+import { Item } from '../Item'
+import { useAppSelector, useAppDispatch } from '../../store/hooks'
+import { selectItems, selectMode } from './todoSlice'
+import { ItemInterface } from '../../shared/types'
 
 interface TodoProps {}
 
 export const Todo: React.FC<TodoProps> = ({}) => {
+  const dispatch = useAppDispatch()
+  const items = useAppSelector(selectItems)
+  const mode = useAppSelector(selectMode)
+
   return (
     <div className={styles.todoContainer}>
       <h1
@@ -37,9 +44,19 @@ export const Todo: React.FC<TodoProps> = ({}) => {
         />
       </form>
       <div className={styles.itemsContainer}>
-        <Item isChecked={true} itemText='Item 1...' styles={styles} />
+        {/* <Item isChecked={true} itemText='Item 1...' styles={styles} />
         <Item isChecked={true} itemText='Item 2...' styles={styles} />
-        <Item isChecked={true} itemText='Item 3...' styles={styles} />
+        <Item isChecked={true} itemText='Item 3...' styles={styles} /> */}
+        {items.map((item: ItemInterface) => {
+          return (
+            <Item
+              id={item.id}
+              key={item.id}
+              isChecked={item.isChecked}
+              itemText={item.text}
+            />
+          )
+        })}
       </div>
       <footer className={styles.buttonContainer}>
         <section className={styles.leftSection}>
@@ -57,7 +74,9 @@ export const Todo: React.FC<TodoProps> = ({}) => {
             variant='outline'
             color='black'
           />
-          <span className={styles.span}>| 3 items left</span>
+          <span className={styles.span}>
+            | {items.length} items left
+          </span>
         </section>
         <section className={styles.rightSection}>
           <Button size='sm' colorScheme='pink' variant='ghost'>
