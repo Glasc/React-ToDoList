@@ -1,18 +1,18 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { Input } from '@chakra-ui/input'
 import styles from './Todo.module.css'
 import { useAppSelector, useAppDispatch } from '../../store/hooks'
-import { addItem, selectItems, selectMode } from './todoSlice'
+import { addItem, selectItems } from './todoSlice'
 import { Items } from './Items/Items'
 import { H1 } from '../ui/H1'
 import { BottomNav } from './BottomNav/BottomNav'
+import { modeType } from '../../shared/types'
 
 interface TodoProps {}
 
 export const Todo: React.FC<TodoProps> = ({}) => {
   const dispatch = useAppDispatch()
   const items = useAppSelector(selectItems)
-  const mode = useAppSelector(selectMode)
 
   const [inputText, setInputText] = useState<string>('')
 

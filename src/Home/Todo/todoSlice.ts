@@ -1,29 +1,28 @@
 import { RootState } from '../../store/store'
-import { ItemInterface } from '../../shared/types'
-import {
-  createAsyncThunk,
-  createSlice,
-  current,
-  PayloadAction,
-} from '@reduxjs/toolkit'
+import { ItemInterface, modeType } from '../../shared/types'
+import { createSlice, current, PayloadAction } from '@reduxjs/toolkit'
 
 interface todoState {
-  mode: 'adding' | 'editing'
+  isSearching: boolean
+  customItems: ItemInterface[] | []
   items: ItemInterface[]
 }
 
 const initialState: todoState = {
-  mode: 'adding',
+  isSearching: false,
+  customItems: [],
   items: [
     {
       id: 1442342,
       text: 'hello',
       isChecked: true,
+      isEditing: false,
     },
     {
       id: 123212,
       text: 'hello2',
       isChecked: false,
+      isEditing: false,
     },
   ],
 }
@@ -33,7 +32,7 @@ export const todoSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    checkItem: (state, action: PayloadAction<ItemInterface>) => {
+    checkItem: (state, action: PayloadAction<{ id: number }>) => {
       const { id } = action.payload
       state.items = current(state).items.map(
         (currItem: ItemInterface) => {
@@ -50,7 +49,7 @@ export const todoSlice = createSlice({
     ) => {
       const { id, text } = action.payload
       state.items = [
-        { id, text, isChecked: false },
+        { id, text, isChecked: false, isEditing: false },
         ...current(state).items,
       ]
     },
@@ -61,13 +60,83 @@ export const todoSlice = createSlice({
         return false
       })
     },
+    toggleEdit: (state, action: PayloadAction<{ id: number }>) => {
+      const { id } = action.payload
+      state.items = current(state).items.map(
+        (currItem: ItemInterface) => {
+          if (currItem.id === id) {
+            currItem = { ...currItem, isEditing: !currItem.isEditing }
+          }
+          return currItem
+        }
+      )
+    },
+    updateItem: (
+      state,
+      action: PayloadAction<{ id: number; newText: string }>
+    ) => {
+      const { id, newText } = action.payload
+      state.items = current(state).items.map(
+        (currItem: ItemInterface) => {
+          if (currItem.id === id) {
+            currItem = { ...currItem, text: newText }
+          }
+          return currItem
+        }
+      )
+    },
+    showAllItems: (state) => {
+      state.customItems = current(state).items
+    },
+    showActiveItems: (state) => {
+      state.customItems = current(state).items.filter((currItem) => {
+        if (!currItem.isChecked) {
+          return true
+        }
+        return false
+      })
+    },
+    showCompleteItems: (state) => {
+      state.customItems = current(state).items.filter((currItem) => {
+        if (currItem.isChecked) {
+          return true
+        }
+        return false
+      })
+    },
+    searchItems: (state, action: PayloadAction<{ word: string }>) => {
+      state.customItems = current(state).items.filter((currItem) => {
+        const { word } = action.payload
+        if (currItem.text.includes(word)) {
+          return true
+        }
+        return false
+      })
+    },
+    toggleIsSearching: (state) => {
+      state.isSearching = !current(state).isSearching
+    },
   },
 })
 
-export const { checkItem, addItem, deleteItem } = todoSlice.actions
+export const {
+  checkItem,
+  addItem,
+  deleteItem,
+  toggleEdit,
+  updateItem,
+  showAllItems,
+  showActiveItems,
+  showCompleteItems,
+  toggleIsSearching,
+  searchItems,
+} = todoSlice.actions
 
 export const selectItems = (state: RootState) => state.todo.items
-export const selectMode = (state: RootState) => state.todo.mode
+export const selectCustomItems = (state: RootState) =>
+  state.todo.customItems
+export const selectIsSearching = (state: RootState) =>
+  state.todo.isSearching
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
